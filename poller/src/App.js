@@ -77,6 +77,7 @@ function App() {
         padding: "20px",
         height: "calc(100vh - 40px)",
         backgroundColor: "#537D8D", //"#eceef6",
+        overflow: 'auto',
       }}
     >
       <link
@@ -100,8 +101,8 @@ function App() {
           </Grid>
           <Grid item xs={12} sm={12}>
             <Grid container spacing={3}>
-              <Grid item xs={12} sm={4}>
-                <Paper style={{ height: "100%" }}>
+              <Grid item xs={12} sm={6} md={4}>
+                <Paper style={{minHeight: 'calc(100vh - 240px)'}}>
                   <PollCreate
                     question={question}
                     setQuestion={setQuestion}
@@ -111,8 +112,8 @@ function App() {
                   />
                 </Paper>
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <Paper style={{ height: "100%" }}>
+              <Grid item xs={12} sm={6} md={4}>
+                <Paper style={{minHeight: 'calc(100vh - 240px)'}}>
                   <PollVote
                     question={question}
                     options={options}
@@ -121,7 +122,7 @@ function App() {
                 </Paper>
               </Grid>
               <Grid item xs={12} sm={12} md={4}>
-                <Paper style={{ height: "100%" }}>
+                <Paper style={{minHeight: 'calc(100vh - 240px)'}}>
                   <PollResults question={question} options={options} />
                 </Paper>
               </Grid>

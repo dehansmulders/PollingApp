@@ -7,7 +7,7 @@ const theme = createMuiTheme({
       },
       secondary: {
           main: '#64b7ff'
-      }
+      },
   },
   overrides: {
     MuiPaper: {

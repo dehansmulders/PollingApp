@@ -42,7 +42,7 @@ function PollVote(props) {
       <Grid item xs={12} className={props.classes?.header}>
         <Typography variant={"h5"}>{props.question}</Typography>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} style={{marginTop: '15px'}}>
         <RadioGroup onChange={(e) => setSelectedOption(e.target.value)}>
           {Object.keys(props.options).map((option, index) => (
             <FormControlLabel
@@ -50,6 +50,7 @@ function PollVote(props) {
               value={option}
               control={<Radio checked={selectedOption === option} />}
               label={option}
+              style={index > 0 ? {marginTop: '5px'} : {}}
             />
           ))}
         </RadioGroup>
