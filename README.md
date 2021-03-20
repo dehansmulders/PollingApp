@@ -26,13 +26,13 @@ The polling appication has the following features:
 - The SAMPLE button populated the application with pre-fabricated data to demonstrate capability.  
 - The application is split into 3 segments, each fulfilling a seperate purpose.
     ### Create polling options
-        - The owner can specify the poll question, then add up to 10 options.
-        - The options can be edited or removed at any time, however there must always be at least 2 options remaining.
+    - The owner can specify the poll question, then add up to 10 options.
+    - The options can be edited or removed at any time, however there must always be at least 2 options remaining.
 
     ### Vote for an option
-        - The respondant can vote on an available option, repeatedly if they so choose.
+    - The respondant can vote on an available option, repeatedly if they so choose.
 
     ### View poll results
-        - The user can observe the poll results in a graphical manner
+    - The user can observe the poll results in a graphical manner
 
 - All fields are limited to 80 characters.
