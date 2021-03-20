@@ -6,7 +6,7 @@ const theme = createMuiTheme({
           main: '#222222'
       },
       secondary: {
-          main: '#64b7ff'
+          main: 'rgba(255, 99, 132, 1)'
       },
   },
   overrides: {
@@ -19,8 +19,13 @@ const theme = createMuiTheme({
     MuiTypography: {
         root: {
             overflow: 'hidden',
-            textOverflow: 'ellipses',
+            textOverflow: 'ellipsis',
         }
+    },
+    MuiFormControlLabel: {
+      root: {
+        width: '100%',
+      }
     }
   },
 });
