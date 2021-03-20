@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { withStyles, createStyles } from "@material-ui/core/styles";
-import { Typography, Grid } from "@material-ui/core";
+import { Typography, Grid, Button, ClickAwayListener } from "@material-ui/core";
 import { Bar, Doughnut } from "react-chartjs-2";
+import FireWorks from "../fireworks/fireworks";
 
 const styles = (Theme) =>
   createStyles({
@@ -11,6 +12,16 @@ const styles = (Theme) =>
       border: "1px solid rgba(54, 162, 235, 1)",
       background: "rgba(54, 162, 235, 0.2)",
       minHeight: "56px",
+    },
+    footer: {
+      borderRadius: "5px",
+      border: "1px solid rgba(75, 192, 192, 1)",
+      background: "rgba(75, 192, 192, 0.2)",
+      color: Theme.palette.getContrastText("rgba(75, 192, 192, 0.4)"),
+      padding: '0 !important',
+    },
+    button: {
+      width: "100%",
     },
   });
 
@@ -66,8 +77,21 @@ function getTotalVotes(options) {
   return count;
 }
 
+function getWinningOption(options) {
+  let winningName = "";
+  let winningCount = -1;
+  Object.keys(options).forEach((option) => {
+    if(options[option] > winningCount){
+      winningName = option;
+      winningCount = options[option];
+    }
+  });
+  return winningName;
+}
+
 function PollResult(props) {
   const data = buildData(props);
+  const [showWinner, setShowWinner] = useState(false);
   const barOptions = {
     legend: { display: false },
     scales: {
@@ -120,6 +144,14 @@ function PollResult(props) {
       <Grid item xs={12}>
         <Bar data={data} options={barOptions} />
       </Grid>
+      <Grid item xs={12} className={props.classes?.footer}>
+      <ClickAwayListener onClickAway={() => setShowWinner(false)}>
+          <Button className={props.classes?.button} onClick={() => setShowWinner(!showWinner)}>
+            Celebrate Winner!
+          </Button>
+        </ClickAwayListener>
+      </Grid>
+      <FireWorks show={showWinner} text={`${getWinningOption(props.options)} won!`} />
     </Grid>
   );
 }
