@@ -69,7 +69,12 @@ function App(props) {
       let _options = {};
       Object.keys(options).forEach((o) => {
         if (o === prevOption) {
-          _options[newOption] = options[o];
+          //check for duplicates
+          if(_options.hasOwnProperty(newOption)){
+            _options[newOption + '2'] = options[o];
+          } else {
+            _options[newOption] = options[o];
+          }
         } else {
           _options[o] = options[o];
         }
