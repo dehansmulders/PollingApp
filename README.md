@@ -8,6 +8,10 @@ From the root directory, this should simply be:
 
 ### 'cd poller'
 
+Install the necessary libraries with
+
+### 'npm install'
+
 then just run the app with:
 
 ### 'npm start'
