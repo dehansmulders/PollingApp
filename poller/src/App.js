@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { withStyles, createStyles } from "@material-ui/core/styles";
 import {
   ThemeProvider,
   Grid,
@@ -7,15 +8,33 @@ import {
   Paper,
   Tooltip,
 } from "@material-ui/core";
-import { Replay, BarChart} from "@material-ui/icons";
+import { Replay, BarChart } from "@material-ui/icons";
 import PollCreate from "./sections/poll_create";
 import PollVote from "./sections/poll_vote";
 import PollResults from "./sections/poll_results";
 import Theme from "./theme/theme";
+import { SnackbarProvider } from "notistack";
 
-function App() {
-  const [question, setQuestion] = useState("");
-  const [options, setOptions] = useState({});
+const styles = (Theme) =>
+  createStyles({
+    successSnackbar: {
+      border: "1px solid rgba(75, 192, 192, 1)",
+      backgroundColor: "rgba(75, 192, 192, 0.8) !important",
+    },
+    errorSnackbar: {
+      border: "1px solid rgba(255, 99, 132, 1)",
+      backgroundColor: "rgba(255, 99, 132, 0.8) !important",
+    },
+  });
+
+function App(props) {
+  const defaultQuestion = "";
+  const defaultOptions = {
+    Option1: 0,
+    Option2: 0,
+  };
+  const [question, setQuestion] = useState(defaultQuestion);
+  const [options, setOptions] = useState(defaultOptions);
 
   /**Add a new option */
   const addOption = (option) => {
@@ -43,10 +62,28 @@ function App() {
     }
   };
 
+  /**Edit an existing option */
+  const editOption = (prevOption, newOption) => {
+    //if the option does not exist or change, ignore
+    if (options.hasOwnProperty(prevOption) && prevOption !== newOption) {
+      let _options = {};
+      Object.keys(options).forEach((o) => {
+        if (o === prevOption) {
+          _options[newOption] = options[o];
+        } else {
+          _options[o] = options[o];
+        }
+      });
+      setOptions(_options);
+    } else {
+      return;
+    }
+  };
+
   /**Resets all options */
   const resetAll = () => {
-    setQuestion("");
-    setOptions({});
+    setQuestion(defaultQuestion);
+    setOptions(defaultOptions);
   };
 
   /**Inserts some sample data */
@@ -76,8 +113,8 @@ function App() {
       style={{
         padding: "20px",
         height: "calc(100vh - 40px)",
-        backgroundColor: "#537D8D", //"#eceef6",
-        overflow: 'auto',
+        backgroundColor: "#e0e0e7",
+        overflow: "auto",
       }}
     >
       <link
@@ -85,53 +122,68 @@ function App() {
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
       />
       <ThemeProvider theme={Theme}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={12}>
-            <Paper>
-              <Typography variant={"h3"}>
-                {"Poll creator 2000"}
-              </Typography>
-              <Tooltip title={'Reset data to initial state'}>
-                <Button startIcon={<Replay/>} onClick={resetAll}>Reset</Button>
-              </Tooltip>
-              <Tooltip title={'Load sample data'}>
-                <Button startIcon={<BarChart/>} onClick={insertSample}>Sample</Button>
-              </Tooltip>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} sm={12}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6} md={4}>
-                <Paper style={{minHeight: 'calc(100vh - 240px)'}}>
-                  <PollCreate
-                    question={question}
-                    setQuestion={setQuestion}
-                    options={options}
-                    addOption={addOption}
-                    removeOption={removeOption}
-                  />
-                </Paper>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Paper style={{minHeight: 'calc(100vh - 240px)'}}>
-                  <PollVote
-                    question={question}
-                    options={options}
-                    incrementVote={incrementVote}
-                  />
-                </Paper>
-              </Grid>
-              <Grid item xs={12} sm={12} md={4}>
-                <Paper style={{minHeight: 'calc(100vh - 240px)'}}>
-                  <PollResults question={question} options={options} />
-                </Paper>
+        <SnackbarProvider
+          maxSnack={3}
+          classes={{
+            variantSuccess: props.classes?.successSnackbar,
+            variantError: props.classes?.errorSnackbar,
+          }}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+        >
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={12}>
+              <Paper>
+                <Typography variant={"h3"}>{"Poll Creator 2000"}</Typography>
+                <Tooltip title={"Reset data to initial state"}>
+                  <Button startIcon={<Replay />} onClick={resetAll}>
+                    Reset
+                  </Button>
+                </Tooltip>
+                <Tooltip title={"Load sample data"}>
+                  <Button startIcon={<BarChart />} onClick={insertSample}>
+                    Sample
+                  </Button>
+                </Tooltip>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Paper style={{ minHeight: "calc(100vh - 240px)" }}>
+                    <PollCreate
+                      question={question}
+                      setQuestion={setQuestion}
+                      options={options}
+                      addOption={addOption}
+                      removeOption={removeOption}
+                      editOption={editOption}
+                    />
+                  </Paper>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Paper style={{ minHeight: "calc(100vh - 240px)" }}>
+                    <PollVote
+                      question={question}
+                      options={options}
+                      incrementVote={incrementVote}
+                    />
+                  </Paper>
+                </Grid>
+                <Grid item xs={12} sm={12} md={4}>
+                  <Paper style={{ minHeight: "calc(100vh - 240px)" }}>
+                    <PollResults question={question} options={options} />
+                  </Paper>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </SnackbarProvider>
       </ThemeProvider>
     </div>
   );
 }
 
-export default App;
+export default withStyles(styles)(App);

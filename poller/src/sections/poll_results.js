@@ -1,16 +1,15 @@
 import React from "react";
 import { withStyles, createStyles } from "@material-ui/core/styles";
 import { Typography, Grid } from "@material-ui/core";
-import { Bar, Pie } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 
 const styles = (Theme) =>
   createStyles({
     root: {},
     header: {
       borderRadius: "5px",
-      border: "1px solid rgba(255, 99, 132, 1)",
-      background: "rgba(255, 99, 132, 0.4)",
-      color: Theme.palette.getContrastText("rgba(255, 99, 132, 0.4)"),
+      border: "1px solid rgba(54, 162, 235, 1)",
+      background: "rgba(54, 162, 235, 0.2)",
       minHeight: "56px",
     },
   });
@@ -59,22 +58,64 @@ function buildData(props) {
   return dataObj;
 }
 
+function getTotalVotes(options) {
+  let count = 0;
+  Object.keys(options).forEach((option) => {
+    count += options[option];
+  });
+  return count;
+}
+
 function PollResult(props) {
   const data = buildData(props);
   const barOptions = {
     legend: { display: false },
-    scales: { 
-        xAxes: [{ gridLines: {display: false} }],
-        yAxes: [{ ticks: { beginAtZero: true }, gridLines: {display: true} }] 
+    scales: {
+      xAxes: [{ gridLines: { display: false } }],
+      yAxes: [{ ticks: { beginAtZero: true }, gridLines: { display: true } }],
     },
   };
+
+  const pieOptions = {
+    elements: {
+      center: {
+        text: `Total: ${getTotalVotes(props.options)}`,
+      },
+    },
+  };
+
+  const piePlugins = [
+    {
+      beforeDraw: function (chart) {
+        if (chart.config.options.elements.center) {
+          var height = chart.chart.height,
+            ctx = chart.chart.ctx;
+
+          var centerConfig = chart.config.options.elements.center;
+          ctx.restore();
+          var fontSize = (height / 240).toFixed(2);
+          ctx.font = fontSize + "em sans-serif";
+          ctx.textBaseline = "middle";
+          ctx.textAlign = "center";
+
+          var text = centerConfig.text,
+            textX = (chart.chartArea.left + chart.chartArea.right) / 2,
+            textY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+
+          ctx.fillText(text, textX, textY);
+          ctx.save();
+        }
+      },
+    },
+  ];
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} className={props.classes?.header}>
         <Typography variant={"h5"}>{props.question}</Typography>
       </Grid>
       <Grid item xs={12}>
-        <Pie data={data} />
+        <Doughnut data={data} options={pieOptions} plugins={piePlugins} />
       </Grid>
       <Grid item xs={12}>
         <Bar data={data} options={barOptions} />
