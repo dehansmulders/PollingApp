@@ -48,6 +48,26 @@ const styles = (Theme) =>
 function PollCreate(props) {
   const maxOptionsCount = 10;
   const [newOption, setNewOption] = useState("");
+
+  const handleAddOption = () => {
+    if (Object.keys(props.options).length >= maxOptionsCount) {
+      props.enqueueSnackbar("Options reached the limit of 10.", {
+        variant: "error",
+      });
+    } else if (!newOption || newOption === "") {
+      props.enqueueSnackbar("Please type an answer first.", {
+        variant: "error",
+      });
+    } else if (props.options.hasOwnProperty(newOption)) {
+      props.enqueueSnackbar(`'${newOption}' is already an option.`, {
+        variant: "error",
+      });
+    } else {
+      props.addOption(newOption);
+      setNewOption("");
+    }
+  };
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} className={props.classes?.header}>
@@ -60,7 +80,7 @@ function PollCreate(props) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} data-testid={"edit-option-list"}>
         {Object.keys(props.options).map((option, index) => (
           <Box
             className={props.classes?.listOption}
@@ -73,7 +93,10 @@ function PollCreate(props) {
               variant={"outlined"}
               size={"small"}
               onChange={(e) => props.editOption(option, e.target.value)}
-              inputProps={{ maxLength: 80 }}
+              inputProps={{
+                maxLength: 80,
+                "data-testid": "edit-option-list-item",
+              }}
               fullWidth
             />
             <Tooltip title={"Remove"}>
@@ -111,37 +134,22 @@ function PollCreate(props) {
             onChange={(e) => setNewOption(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                props.addOption(newOption);
-                setNewOption("");
+                handleAddOption();
               }
             }}
             disabled={Object.keys(props.options).length >= maxOptionsCount}
-            inputProps={{ maxLength: 80 }}
+            inputProps={{
+              maxLength: 80,
+              "data-testid": "add-option-field",
+            }}
             fullWidth
           />
           <Tooltip title={"Add"}>
             <Button
+              data-testid={"add-option-button"}
               className={props.classes?.button}
               //startIcon={<Add />}
-              onClick={() => {
-                if (Object.keys(props.options).length >= maxOptionsCount) {
-                  props.enqueueSnackbar("Options reached the limit of 10.", {
-                    variant: "error",
-                  });
-                } else if (!newOption || newOption === "") {
-                  props.enqueueSnackbar("Please type an answer first.", {
-                    variant: "error",
-                  });
-                } else if (props.options.hasOwnProperty(newOption)) {
-                  props.enqueueSnackbar(
-                    `'${newOption}' is already an option.`,
-                    { variant: "error" }
-                  );
-                } else {
-                  props.addOption(newOption);
-                  setNewOption("");
-                }
-              }}
+              onClick={handleAddOption}
             >
               {"Add"}
             </Button>

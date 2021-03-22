@@ -43,9 +43,9 @@ function App(props) {
       if (options.hasOwnProperty(option)) {
         return;
       } else {
-        let _options = { ...options };
-        _options[option] = 0;
-        setOptions(_options);
+        let newOptions = { ...options };
+        newOptions[option] = 0;
+        setOptions(newOptions);
       }
     }
   };
@@ -54,9 +54,9 @@ function App(props) {
   const removeOption = (option) => {
     //if the option does not exists, ignore
     if (options.hasOwnProperty(option)) {
-      let _options = { ...options };
-      delete _options[option];
-      setOptions(_options);
+      let newOptions = { ...options };
+      delete newOptions[option];
+      setOptions(newOptions);
     } else {
       return;
     }
@@ -66,20 +66,20 @@ function App(props) {
   const editOption = (prevOption, newOption) => {
     //if the option does not exist or change, ignore
     if (options.hasOwnProperty(prevOption) && prevOption !== newOption) {
-      let _options = {};
+      let newOptions = {};
       Object.keys(options).forEach((o) => {
         if (o === prevOption) {
           //check for duplicates
-          if(_options.hasOwnProperty(newOption)){
-            _options[newOption + '2'] = options[o];
+          if(newOptions.hasOwnProperty(newOption)){
+            newOptions[newOption + '2'] = options[o];
           } else {
-            _options[newOption] = options[o];
+            newOptions[newOption] = options[o];
           }
         } else {
-          _options[o] = options[o];
+          newOptions[o] = options[o];
         }
       });
-      setOptions(_options);
+      setOptions(newOptions);
     } else {
       return;
     }
@@ -106,9 +106,9 @@ function App(props) {
   /**Increment the count of the vote */
   const incrementVote = (vote) => {
     if (vote) {
-      let _options = { ...options };
-      _options[vote] = _options[vote] + 1;
-      setOptions(_options);
+      let newOptions = { ...options };
+      newOptions[vote] = newOptions[vote] + 1;
+      setOptions(newOptions);
     }
   };
 
@@ -122,10 +122,6 @@ function App(props) {
         overflow: "auto",
       }}
     >
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-      />
       <ThemeProvider theme={Theme}>
         <SnackbarProvider
           maxSnack={3}
