@@ -3,11 +3,6 @@ A basic application where users create a question poll, submit an answer and vie
 
 ## To run the app
 
-Navigate to the 'poller' folder.
-From the root directory, this should simply be:
-
-### 'cd poller'
-
 Install the necessary libraries with
 
 ### 'npm install'
