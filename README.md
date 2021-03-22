@@ -1,7 +1,14 @@
 # PollingApp
 A basic application where users create a question poll, submit an answer and view results
 
-## To run the app
+## To run the app in production
+
+Serve the build folder with
+
+### 'serve -s build'
+
+Open [http://localhost:5000](http://localhost:5000) to view it in the browser.
+## To run the app in development
 
 Install the necessary libraries with
 
